@@ -1,126 +1,35 @@
 return {
   -- Autocompletion
   {
-    'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'garymjr/nvim-snippets',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
-      'rafamadriz/friendly-snippets',
-    },
-    config = function()
-      local cmp = require('cmp')
+    "saghen/blink.cmp",
+    version = "*",
+    build = "cargo build --release",
+    dependencies = "rafamadriz/friendly-snippets",
+    event = "InsertEnter",
 
-      cmp.setup({
-        sources = {
-          { name = 'nvim_lsp', priority = 1000 },
-          { name = 'snippets', priority = 750 },
-          { name = 'buffer',   priority = 500 },
-          { name = 'path',     priority = 250 },
-        },
-
-        -- Window appearance
-        window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
-        },
-        -- Improved mapping for a better completion experience
-        mapping = cmp.mapping.preset.insert({
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            local col = vim.fn.col('.') - 1
-
-            if cmp.visible() then
-              cmp.select_next_item({ behavior = 'select' })
-            elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-              fallback()
-            else
-              cmp.complete()
-            end
-          end, { 'i', 's' }),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = 'select' }),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-d>'] = cmp.mapping.scroll_docs(4),
-          ['<C-e>'] = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          }),
-        }),
-
-        snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
-          end,
-        },
-
-        -- Add borders to completion menu
-        formatting = {
-          format = function(entry, vim_item)
-            vim_item.menu = ({
-              nvim_lsp = "[LSP]",
-              buffer = "[Buffer]",
-              path = "[Path]",
-            })[entry.source.name]
-            return vim_item
-          end
-        },
-      })
-    end
-  },
-  {
-    "garymjr/nvim-snippets",
-    dependencies = {
-      'rafamadriz/friendly-snippets',
-    },
-    keys = {
-      {
-        "<Tab>",
-        function()
-          if vim.snippet.active({ direction = 1 }) then
-            vim.schedule(function()
-              vim.snippet.jump(1)
-            end)
-            return
-          end
-          return "<Tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = "i",
-      },
-      {
-        "<Tab>",
-        function()
-          vim.schedule(function()
-            vim.snippet.jump(1)
-          end)
-        end,
-        expr = true,
-        silent = true,
-        mode = "s",
-      },
-      {
-        "<S-Tab>",
-        function()
-          if vim.snippet.active({ direction = -1 }) then
-            vim.schedule(function()
-              vim.snippet.jump(-1)
-            end)
-            return
-          end
-          return "<S-Tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = { "i", "s" },
-      },
-    },
+    ---@module "blink.cmp"
+    ---@type blink.cmp.Config
     opts = {
-      friendly_snippets = true
+      keymap = { preset = "super-tab" },
+      completion = {
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 500
+        },
+        ghost_text = {
+          enabled = true
+        },
+      },
+
+      appearance = {
+        use_nvim_cmp_as_default = false,
+        nerd_font_variant = "mono"
+      },
+
+      sources = { default = { "lsp", "path", "snippets", "buffer" } },
     },
+    opts_extend = { "sources.default" },
+    signature = { enabled = true }
   },
 
   -- LSP
@@ -129,7 +38,6 @@ return {
     cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-      { 'hrsh7th/cmp-nvim-lsp' },
       { 'williamboman/mason.nvim' },
       { 'williamboman/mason-lspconfig.nvim' },
       { 'folke/lazydev.nvim',               ft = "lua", opts = {} },
@@ -166,7 +74,7 @@ return {
       lsp_defaults.capabilities = vim.tbl_deep_extend(
         'force',
         lsp_defaults.capabilities,
-        require('cmp_nvim_lsp').default_capabilities()
+        require('blink.cmp').get_lsp_capabilities()
       )
 
       vim.api.nvim_create_autocmd('LspAttach', {
