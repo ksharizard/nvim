@@ -10,7 +10,11 @@ return {
     ---@module "blink.cmp"
     ---@type blink.cmp.Config
     opts = {
-      keymap = { preset = "super-tab" },
+      keymap = {
+        preset = "enter",
+        ["<Tab>"] = { "select_next", "fallback" },
+        ["<S-Tab>"] = { "select_prev", "fallback" },
+      },
       completion = {
         documentation = {
           auto_show = true,
@@ -18,6 +22,11 @@ return {
         },
         ghost_text = {
           enabled = true
+        },
+        list = {
+          selection = {
+            preselect = false
+          }
         },
       },
 
@@ -148,20 +157,26 @@ return {
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     dependencies = {
-      { "williamboman/mason.nvim",          config = true },
-      { "williamboman/mason-lspconfig.nvim" },
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim"
     },
     opts = {
       ensure_installed = {
+        "marksman",
+        -- "bashls",
+        -- "stylua",
+        -- "luacheck",
+        "rustfmt",
+        "codespell",
+        "shfmt",
+        -- Lua
         "lua_ls",
-        "basedpyright",
-        "ruff",
-        "debugpy",
-        "black",
-        "isort",
-        "taplo",
+        -- Python
+        "basedpyright",    -- Type checker
+        "ruff",            -- Code formatter & linter
+        "debugpy"          -- DAP
       },
-      auto_update = true,
+      auto_update = true
     },
   }
 }
