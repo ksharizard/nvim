@@ -1,38 +1,51 @@
+-- Sane defaults
 local options = {
-  clipboard = "unnamedplus",
-  cmdheight = 0,                           -- more space in the neovim command line for displaying messages
-  completeopt = { "menuone", "noselect" }, -- mostly just for cmp
-  fileencoding = "utf-8",                  -- the encoding written to a file
+  cmdheight = 0,
+  completeopt = { "menuone", "noselect", "fuzzy", "nosort" }, -- mostly just for completion
+  fileencoding = "utf-8",
   hlsearch = false,
-  ignorecase = true,                       -- ignore case in search patterns
+  hidden = false,
+  ignorecase = true,
   laststatus = 3,
   mouse = "a",                             -- allow the mouse to be used in neovim
-  pumheight = 10,                          -- pop up menu height
   relativenumber = true,
-  showmode = false,                        -- we don't need to see things like -- INSERT -- anymore
   signcolumn = "yes",
-  smartcase = true,                        -- smart case
-  smartindent = true,                      -- make indenting smarter again
-  splitbelow = true,                       -- force all horizontal splits to go below current window
-  splitright = true,                       -- force all vertical splits to go to the right of current window
-  swapfile = false,                        -- creates a swapfile
+  smartcase = true,
+  smartindent = true,
+  splitbelow = true,
+  splitright = true,
+  swapfile = false,
   timeoutlen = 200,                        -- time to wait for a mapped sequence to complete (in milliseconds)
   undofile = true,                         -- enable persistent undo
   updatetime = 100,                        -- faster completion (4000ms default)
   writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   expandtab = true,                        -- convert tabs to spaces
-  shiftwidth = 2,                          -- the number of spaces inserted for each indentation
+  shiftwidth = 2,
   tabstop = 2,                             -- insert 2 spaces for a tab
   number = true,                           -- set numbered lines
   numberwidth = 2,                         -- set number column width to 2 {default 4}
   scrolloff = 8,                           -- minimal number of screen lines to keep above and below the cursor
   sidescrolloff = 8,                       -- minimal number of screen columns either side of cursor if wrap is `false`
+  showtabline = 1,
   virtualedit = "onemore",
+  winborder = "rounded",
   wrap = false,
   whichwrap = "<,>,[,]",
 }
-
 vim.wo.fillchars = 'eob: '
+
+for k, v in pairs(options) do
+  vim.opt[k] = v
+end
+
+-- Clipboard
+-- Sync clipboard between OS and Neovim. Schedule the setting after `UiEnter` because it can
+-- increase startup-time. Remove this option if you want your OS clipboard to remain independent.
+vim.api.nvim_create_autocmd('UIEnter', {
+  callback = function()
+    vim.o.clipboard = 'unnamedplus'
+  end,
+})
 
 if vim.fn.has('wsl') == 1 then
   vim.g.clipboard = {
@@ -51,40 +64,3 @@ if vim.fn.has('wsl') == 1 then
   }
 end
 
-for k, v in pairs(options) do
-  vim.opt[k] = v
-end
-
-
--- -- Disable builtin plugins
-local disabled_built_ins = {
-  "2html_plugin",
-  "getscript",
-  "getscriptPlugin",
-  "gzip",
-  "logipat",
-  "netrw",
-  "netrwPlugin",
-  "netrwSettings",
-  "netrwFileHandlers",
-  "matchit",
-  "tar",
-  "tarPlugin",
-  "rrhelper",
-  "spellfile_plugin",
-  "vimball",
-  "vimballPlugin",
-  "zip",
-  "zipPlugin",
-  "tutor",
-  "rplugin",
-  "synmenu",
-  "optwin",
-  "compiler",
-  "bugreport",
-  "ftplugin",
-}
-
-for _, plugin in pairs(disabled_built_ins) do
-  vim.g["loaded_" .. plugin] = 1
-end
