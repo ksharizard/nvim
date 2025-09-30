@@ -45,4 +45,13 @@ keymap("v", "x", '"_x', opts)
 keymap("v", "X", '"_X', opts)
 
 keymap("n", "<C-d>", "<C-d>zz", opts)
-keymap("n", "<C-d>", "<C-d>zz", opts)
+keymap("n", "<C-u>", "<C-u>zz", opts)
+
+
+keymap("n", "<leader>l", "<cmd>Lazy<cr>", opts)
+
+
+-- Change/delete without clobbering the default register
+-- "c" behaves like change but doesn't yank; "<S-d>" deletes without yanking
+keymap("n", "D", '"_dd', opts)
+
