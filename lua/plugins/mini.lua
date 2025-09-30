@@ -1,136 +1,7 @@
-local header_art =
-[[
- ▄▄ •  ▄ .▄      ▄• ▄▌▄▄▌   ▌ ▐·▪  • ▌ ▄ ·.
-▐█ ▀ ▪██▪▐█▪     █▪██▌██•  ▪█·█▌██ ·██ ▐███▪
-▄█ ▀█▄██▀▐█ ▄█▀▄ █▌▐█▌██▪  ▐█▐█•▐█·▐█ ▌▐▌▐█·
-▐█▄▪▐███▌▐▀▐█▌.▐▌▐█▄█▌▐█▌▐▌ ███ ▐█▌██ ██▌▐█▌
-·▀▀▀▀ ▀▀▀ · ▀█▄▀▪ ▀▀▀ .▀▀▀ . ▀  ▀▀▀▀▀  █▪▀▀▀
-]]
-
 return {
-  {
-    "echasnovski/mini.ai",
-    opts = {
-      search_method = 'cover_or_next',
-    },
-  },
-
-  {
-    "echasnovski/mini.clue",
-    config = function()
-      local miniclue = require("mini.clue")
-      miniclue.setup({
-        triggers = {
-          -- Leader triggers
-          { mode = 'n', keys = '<Leader>' },
-          { mode = 'x', keys = '<Leader>' },
-
-          -- Built-in completion
-          { mode = 'i', keys = '<C-x>' },
-
-          -- `g` key
-          { mode = 'n', keys = 'g' },
-          { mode = 'x', keys = 'g' },
-
-          -- Marks
-          { mode = 'n', keys = "'" },
-          { mode = 'n', keys = '`' },
-          { mode = 'x', keys = "'" },
-          { mode = 'x', keys = '`' },
-
-          -- Registers
-          { mode = 'n', keys = '"' },
-          { mode = 'x', keys = '"' },
-          { mode = 'i', keys = '<C-r>' },
-          { mode = 'c', keys = '<C-r>' },
-
-          -- Window commands
-          { mode = 'n', keys = '<C-w>' },
-
-          -- `z` key
-          { mode = 'n', keys = 'z' },
-          { mode = 'x', keys = 'z' },
-        },
-
-        clues = {
-          miniclue.gen_clues.builtin_completion(),
-          miniclue.gen_clues.g(),
-          miniclue.gen_clues.marks(),
-          miniclue.gen_clues.registers(),
-          miniclue.gen_clues.windows(),
-          miniclue.gen_clues.z(),
-        },
-
-        window = {
-          config = { width = 'auto' },
-          delay = 200,
-        },
-      })
-    end,
-  },
-
-  {
-    "echasnovski/mini.comment",
-    event = "VeryLazy",
-    opts = {
-      options = {
-        custom_commentstring = function()
-          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
-        end,
-      },
-    },
-  },
-
-  {
-    'echasnovski/mini.cursorword',
-    config = true,
-  },
-
   {
     'echasnovski/mini.extra',
     config = true,
-  },
-
-  {
-    'echasnovski/mini.files',
-    opts = {
-      windows = {
-        preview = true,
-        width_preview = 75,
-      },
-    },
-    keys = {
-      {
-        "<leader>e",
-        function()
-          if not MiniFiles.close() then MiniFiles.open() end
-        end,
-        desc = "Toggle File Explorer",
-      },
-    },
-  },
-
-  {
-    "echasnovski/mini.indentscope",
-    event = "VeryLazy",
-    opts = {
-      symbol = "│",
-      options = { try_as_border = true },
-    },
-    init = function()
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = {
-          "help",
-          "lazy",
-          "mason",
-          "notify",
-          "toggleterm",
-        },
-        callback = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-    end,
   },
 
   {
@@ -153,43 +24,49 @@ return {
   },
 
   {
-    "echasnovski/mini.pairs",
-    event = "VeryLazy",
-    config = true,
-    keys = {
-      {
-        "<leader>z",
-        function()
-          vim.g.minipairs_disable = not vim.g.minipairs_disable
-          if vim.g.minipairs_disable then
-            print("Disabled auto pairs")
-          else
-            print("Enabled auto pairs")
-          end
-        end,
-        desc = "Toggle auto pairs",
-      },
+    "echasnovski/mini.indentscope",
+    event = "BufReadPost",
+    opts = {
+      symbol = "│",
+      options = { try_as_border = true },
     },
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = {
+          "help",
+          "lazy",
+          "mason",
+          "notify",
+          "toggleterm",
+        },
+        callback = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+    end,
   },
 
   {
-    'echasnovski/mini.starter',
+    "echasnovski/mini.pairs",
+    config = true,
+    event = "InsertEnter",
     opts = {
-      evaluate_single = true,
-      header = header_art,
-      footer = '',
-      query_updaters = 'abcdefghijklmnopqrstuvwxyz0123456789_-.',
-      silent = true,
+      modes = { insert = true, command = true, terminal = false },
+      -- skip autopair when next character is one of these
+      skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+      -- skip autopair when the cursor is inside these treesitter nodes
+      skip_ts = { "string" },
+      -- skip autopair when next character is closing pair
+      -- and there are more closing pairs than opening pairs
+      skip_unbalanced = true,
+      -- better deal with markdown code blocks
+      markdown = true,
     }
   },
 
   {
-    'echasnovski/mini.sessions',
-    config = true
-  },
-
-  {
     'echasnovski/mini.surround',
+    event = "BufReadPost",
     config = true
   }
 }

@@ -1,4 +1,7 @@
 return {
+  "nvim-mini/mini.notify",
+  config = true
+}
 --   "folke/noice.nvim",
 --   event = "VeryLazy",
 --   opts = {
@@ -44,4 +47,4 @@ return {
 --     "MunifTanjim/nui.nvim",
 --     "rcarriga/nvim-notify",
 --   }
-}
+-- }

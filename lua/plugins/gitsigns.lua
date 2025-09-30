@@ -1,5 +1,5 @@
 return {
-  "lewis6991/gitsigns.nvim",
+  "nvim-mini/mini.diff",
   event = "BufReadPost",
   config = true
 }
