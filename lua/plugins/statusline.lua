@@ -18,15 +18,10 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     opts = {
+      theme = "dracula",
       options = {
-        theme = pywal,
         component_separators = '|',
         section_separators = { left = '', right = '' },
-        disabled_filetypes = {
-          statusline = {
-            "ministarter",
-          }
-        }
       },
       sections = {
         lualine_a = { 'mode' },
@@ -49,3 +44,4 @@ return {
     }
   },
 }
+
