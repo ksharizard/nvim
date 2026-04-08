@@ -3,10 +3,11 @@ vim.pack.add({
     src = "https://github.com/saghen/blink.cmp",
     version = vim.version.range("1.x"),
   },
-  "https://github.com/mason-org/mason.nvim",
-  "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
-  "https://github.com/neovim/nvim-lspconfig",
+  {
+    src = "https://github.com/rafamadriz/friendly-snippets",
+  },
 })
+
 vim.api.nvim_create_autocmd("InsertEnter", {
   callback = function()
     require("blink.cmp").setup({
@@ -27,34 +28,21 @@ vim.api.nvim_create_autocmd("InsertEnter", {
         },
       },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
+        providers = {
+          snippets = {
+            opts = {
+              extended_filetypes = {
+                text = { "license" },
+              },
+            },
+          },
+        },
+        default = { "lsp", "path", "buffer", "snippets" },
       },
       signature = { enabled = true },
     })
-    -- opts_extend = { "sources.default" },
   end,
 })
---   dependencies = "rafamadriz/friendly-snippets",
---   event = "InsertEnter",
---   opts = {
--- },
--- {
---   "L3MON4D3/LuaSnip",
---   -- follow latest release.
---   version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
---   -- install jsregexp (optional!).
---   build = "make install_jsregexp",
---   opts = {
---     enable_autosnippets = true,
---   }
--- },
---
--- {
---   "iurimateus/luasnip-latex-snippets.nvim",
---   config = function ()
---     require'luasnip-latex-snippets'.setup({ use_treesitter = true })
---   end
--- },
 
 vim.diagnostic.config({
   virtual_text = {
