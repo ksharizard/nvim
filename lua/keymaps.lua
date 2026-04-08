@@ -41,14 +41,10 @@ vim.keymap.set("n", "<leader>db", function() require("dap").toggle_breakpoint() 
 vim.keymap.set("n", "<leader>dt", function() require("dap").terminate() end, { desc = "Terminate Debugger" })
 vim.keymap.set("n", "<leader>du", function() require("dapui").toggle() end, { desc = "Toggle Debugger UI" })
 
--- Misc
-vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "Open Yazi" })
-vim.keymap.set("n", "<leader>m", "<cmd>Markview Toggle<cr>", { desc = "Toggle markdown renderer" })
-
 -- LSP
-vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "LSP: [R]e[n]ame" })
-vim.keymap.set({ "n", "x" }, "grn", vim.lsp.buf.code_action, { desc = "LSP: [G]oto Code [A]ction" })
-vim.keymap.set("n", "grn", vim.lsp.buf.declaration, { desc = "LSP: [G]oto [D]eclaration" })
+vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "[R]e[n]ame" })
+vim.keymap.set({ "n", "x" }, "grn", vim.lsp.buf.code_action, { desc = "[G]oto Code [A]ction" })
+vim.keymap.set("n", "grn", vim.lsp.buf.declaration, { desc = "[G]oto [D]eclaration" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 vim.keymap.set(
   "n",
@@ -57,4 +53,7 @@ vim.keymap.set(
   { desc = "[F]ormat buffer" }
 )
 
+-- Misc
+vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "Open Yazi" })
+vim.keymap.set("n", "<leader>m", "<cmd>Markview Toggle<cr>", { desc = "Toggle markdown renderer" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
