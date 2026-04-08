@@ -15,48 +15,51 @@ vim.pack.add({
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     version = "main",
   },
-  {
-    src = "https://github.com/nvim-treesitter/nvim-treesitter-context",
-  },
+  -- {
+  --   src = "https://github.com/nvim-treesitter/nvim-treesitter-context",
+  -- },
 })
 
-local ensure_installed = {
-  "bash",
-  "c",
-  "css",
-  "diff",
-  "gitcommit",
-  "html",
-  "javascript",
-  "lua",
-  "luadoc",
-  "markdown",
-  "markdown_inline",
-  "python",
-  "query",
-  "vim",
-  "vimdoc",
-  "yaml",
+opts = {
+  highlight = { enable = true },
+  ensure_installed = {
+    "bash",
+    "c",
+    "css",
+    "diff",
+    "gitcommit",
+    "html",
+    "javascript",
+    "lua",
+    "luadoc",
+    "markdown",
+    "markdown_inline",
+    "python",
+    "query",
+    "vim",
+    "vimdoc",
+    "yaml",
+  },
+  indent = { enable = true },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<C-space>",
+      node_incremental = "<C-space>",
+      scope_incremental = false,
+      node_decremental = "<bs>",
+    },
+  },
 }
 
-local isnt_installed = function(lang) return #vim.api.nvim_get_runtime_file("parser/" .. lang .. ".*", false) == 0 end
-
-local to_install = vim.tbl_filter(isnt_installed, ensure_installed)
-if #to_install > 0 then
-  require("nvim-treesitter").install(to_install)
+if type(opts.ensure_installed) == "table" then
+  local added = {}
+  opts.ensure_installed = vim.tbl_filter(function(lang)
+    if added[lang] then
+      return false
+    end
+    added[lang] = true
+    return true
+  end, opts.ensure_installed)
 end
-
--- Ensure tree-sitter enabled after opening a file for target language
-local filetypes = {}
-for _, lang in ipairs(ensure_installed) do
-  for _, ft in ipairs(vim.treesitter.language.get_filetypes(lang)) do
-    table.insert(filetypes, ft)
-  end
-end
-
-vim.api.nvim_create_autocmd("FileType", {
-  desc = "Start treesitter",
-  group = vim.api.nvim_create_augroup("start_treesitter", { clear = true }),
-  pattern = filetypes,
-  callback = function(ev) vim.treesitter.start(ev.buf) end,
-})
+require("nvim-treesitter.config").setup(opts)
