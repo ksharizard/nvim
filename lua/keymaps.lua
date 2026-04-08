@@ -16,8 +16,8 @@ vim.keymap.set("n", "<A-h>", ":vertical resize -2<CR>", { desc = "Decrease windo
 vim.keymap.set("n", "<A-l>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 
 -- Navigate buffers
-vim.keymap.set("n", "L", ":bnext<CR>", { desc = "Next buffer" })
-vim.keymap.set("n", "H", ":bprevious<CR>", { desc = "Previous buffer" })
+vim.keymap.set("n", "L", ":bnext<CR>", { silent = true, desc = "Next buffer" })
+vim.keymap.set("n", "H", ":bprevious<CR>", { silent = true, desc = "Previous buffer" })
 
 -- Stay in indent mode
 vim.keymap.set("v", "<", "<gv", { desc = "Indent and keep selection" })
@@ -49,6 +49,12 @@ vim.keymap.set("n", "<leader>m", "<cmd>Markview Toggle<cr>", { desc = "Toggle ma
 vim.keymap.set("n", "grn", vim.lsp.buf.rename, { desc = "LSP: [R]e[n]ame" })
 vim.keymap.set({ "n", "x" }, "grn", vim.lsp.buf.code_action, { desc = "LSP: [G]oto Code [A]ction" })
 vim.keymap.set("n", "grn", vim.lsp.buf.declaration, { desc = "LSP: [G]oto [D]eclaration" })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('n', '<leader>f', function() require('conform').format { async = true, lsp_format = 'fallback' } end,
-  { desc = '[F]ormat buffer' })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set(
+  "n",
+  "<leader>f",
+  function() require("conform").format({ async = true, lsp_format = "fallback" }) end,
+  { desc = "[F]ormat buffer" }
+)
+
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
