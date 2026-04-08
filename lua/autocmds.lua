@@ -23,17 +23,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- Auto create dir when saving a file, in case some intermediate directory does not exist
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-  callback = function(event)
-    if event.match:match("^%w%w+:[\\/][\\/]") then
-      return
-    end
-    local file = vim.uv.fs_realpath(event.match) or event.match
-    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
-  end,
-})
-
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
   pattern = {
@@ -88,13 +77,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
   pattern = '',
   command = 'set fo-=c fo-=r fo-=o'
 })
-
--- Set text filetype
--- vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-
---   pattern = "*.txt",
---   command = 'setfiletype text'
--- })
 
 -- sudo write
 vim.api.nvim_create_user_command("Suw", function()
