@@ -1,15 +1,15 @@
-vim.pack.add {
+vim.pack.add({
   {
     src = "https://github.com/saghen/blink.cmp",
-    version = vim.version.range "1.0",
+    version = vim.version.range("1.x"),
   },
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
   "https://github.com/neovim/nvim-lspconfig",
-}
+})
 vim.api.nvim_create_autocmd("InsertEnter", {
   callback = function()
-    require("blink.cmp").setup {
+    require("blink.cmp").setup({
       keymap = {
         preset = "enter",
         ["<Tab>"] = { "select_next", "fallback" },
@@ -30,7 +30,7 @@ vim.api.nvim_create_autocmd("InsertEnter", {
         default = { "lsp", "path", "snippets", "buffer" },
       },
       signature = { enabled = true },
-    }
+    })
     -- opts_extend = { "sources.default" },
   end,
 })
@@ -56,13 +56,13 @@ vim.api.nvim_create_autocmd("InsertEnter", {
 --   end
 -- },
 
-vim.diagnostic.config {
+vim.diagnostic.config({
   virtual_text = {
     current_line = true,
     source = "if_many",
   },
   severity_sort = true,
-}
+})
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("lsp-completion", { clear = true }),
@@ -86,30 +86,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
         callback = function(event2)
           vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = "lsp-highlight", buffer = event2.buf }
+          vim.api.nvim_clear_autocmds({ group = "lsp-highlight", buffer = event2.buf })
         end,
       })
     end
   end,
 })
 
-require("mason").setup()
-require("mason-tool-installer").setup {
-  ensure_installed = {
-    -- python
-    "ruff",
-    "ty",
-    -- lua
-    "lua-language-server",
-    "stylua",
-  },
-}
-
 vim.lsp.config("lua_ls", {
   on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
-      if path ~= vim.fn.stdpath "config" and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc")) then return end
+      if
+        path ~= vim.fn.stdpath("config")
+        and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+      then
+        return
+      end
     end
 
     client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
@@ -146,9 +139,9 @@ vim.lsp.config("lua_ls", {
     Lua = {},
   },
 })
-vim.lsp.enable "lua_ls"
+vim.lsp.enable("lua_ls")
 
-vim.pack.add { "https://github.com/stevearc/conform.nvim" }
+vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 
 vim.api.nvim_create_user_command("FormatDisable", function(args)
   if args.bang then
@@ -168,24 +161,30 @@ end, {
   desc = "Re-enable autoformat-on-save",
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
+vim.api.nvim_create_autocmd("BufWritePost", {
   callback = function()
-    require("conform").setup {
+    require("conform").setup({
       notify_on_error = false,
       format_on_save = function(bufnr)
         -- Disable autoformat on certain filetypes
         local ignore_filetypes = { "sql", "java" }
-        if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then return end
+        if vim.tbl_contains(ignore_filetypes, vim.bo[bufnr].filetype) then
+          return
+        end
         -- Disable with a global or buffer-local variable
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
         -- Disable autoformat for files in a certain path
         local bufname = vim.api.nvim_buf_get_name(bufnr)
-        if bufname:match "/node_modules/" then return end
+        if bufname:match("/node_modules/") then
+          return
+        end
         return { timeout_ms = 500, lsp_format = "fallback" }
       end,
       formatters_by_ft = {
         lua = { "stylua" },
       },
-    }
+    })
   end,
 })
