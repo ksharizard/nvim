@@ -15,3 +15,12 @@ vim.cmd.inoreabbrev("<buffer> -- #")
 vim.cmd.inoreabbrev("<buffer> null None")
 vim.cmd.inoreabbrev("<buffer> none None")
 vim.cmd.inoreabbrev("<buffer> nil None")
+
+vim.pack.add({ "https://github.com/mfussenegger/nvim-dap-python" })
+
+-- uses the debugypy installation by mason
+-- local debugpyPythonPath = require("mason-registry").get_package("debugpy"):get_install_path()
+--   .. "/venv/bin/python3"
+-- require("dap-python").setup(debugpyPythonPath, {})
+require("dap-python").setup("python3")
+-- vim.pack.add({"https://github.com/chrisgrieser/nvim-puppeteer"})
