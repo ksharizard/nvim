@@ -10,12 +10,19 @@
 - `tree-sitter-cli` - syntax highlighting
 
 ### Language tools
+#### Lua
+- `lua-language-server` - Lua LSP
+- `stylua` - Lua linter
+
+#### Python
 - `debugpy` - Python DAP
 - `ruff` - Fast Python linter and code formatter
 - `ty` - Fast Python type checker and language server
 
-- `lua-language-server` - Lua LSP
-- `stylua` - Lua linter
+#### Shell
+- `bash-language-server` - Bash LSP
+- `shellharden` - Bash formatter and linter
+
 
 ## Installation
 ```bash
